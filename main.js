@@ -1,9 +1,8 @@
 import * as THREE from "three";
 
-import { OrbitControls } from "./jsm/controls/OrbitControls.js";
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { SDFGeometryGenerator } from "three/addons/geometries/SDFGeometryGenerator.js";
-import Stats from "three/addons/libs/stats.module.js";
-import { GUI } from "three/addons/libs/lil-gui.module.min.js";
+import GUI from 'lil-gui';
 
 let renderer, stats, meshFromSDF, scene, camera, clock, controls;
 
@@ -69,30 +68,16 @@ function init() {
   clock = new THREE.Clock();
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
+
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
-
-  stats = new Stats();
-  document.body.appendChild(stats.dom);
 
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
 
   window.addEventListener("resize", onWindowResize);
 
-  //
-
-  const panel = new GUI();
-
-  panel.add(settings, "res", 1, 6, 1).name("Res").onFinishChange(compile);
-  panel.add(settings, "bounds", 1, 10, 1).name("Bounds").onFinishChange(compile);
-  panel.add(settings, "material", ["depth", "normal"]).name("Material").onChange(setMaterial);
-  panel.add(settings, "wireframe").name("Wireframe").onChange(setMaterial);
-  panel.add(settings, "autoRotate").name("Auto Rotate");
-  panel.add(settings, "vertexCount").name("Vertex count").listen().disable();
-
-  //
 
   compile();
 }
@@ -102,14 +87,7 @@ function compile() {
   const geometry = generator.generate(Math.pow(2, settings.res + 2), shader, settings.bounds);
   geometry.computeVertexNormals();
 
-  if (meshFromSDF) {
-    // updates mesh
-
-    meshFromSDF.geometry.dispose();
-    meshFromSDF.geometry = geometry;
-  } else {
     // inits meshFromSDF : THREE.Mesh
-
     meshFromSDF = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial());
     scene.add(meshFromSDF);
 
@@ -117,19 +95,14 @@ function compile() {
     meshFromSDF.scale.set(scale, scale, scale);
 
     setMaterial();
-  }
 
-  settings.vertexCount = geometry.attributes.position.count;
 }
 
 function setMaterial() {
   meshFromSDF.material.dispose();
 
-  if (settings.material == "depth") {
-    meshFromSDF.material = new THREE.MeshDepthMaterial();
-  } else if (settings.material == "normal") {
-    meshFromSDF.material = new THREE.MeshNormalMaterial();
-  }
+  meshFromSDF.material = new THREE.MeshDepthMaterial();
+
 
   meshFromSDF.material.wireframe = settings.wireframe;
 }
@@ -157,9 +130,7 @@ function animate() {
 
   controls.update();
 
-  if (settings.autoRotate) {
-    meshFromSDF.rotation.y += Math.PI * 0.05 * clock.getDelta();
-  }
+   meshFromSDF.rotation.y += Math.PI * 0.03 * clock.getDelta();
 
   render();
 

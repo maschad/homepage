@@ -4,11 +4,16 @@
   "description": "my personal website",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "lil-gui": "^0.19.2",
+    "stats.js": "^0.17.0",
     "three": "^0.162.0"
   },
   "devDependencies": {
