@@ -5,8 +5,39 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link type="text/css" rel="stylesheet" href="main.css">
+		<style>
+			.menu-container {
+				position: fixed;
+				top: 20px;
+				right: 20px;
+				z-index: 1000;
+				display: flex;
+				gap: 20px;
+			}
+
+			.menu-item {
+				color: white;
+				cursor: pointer;
+				padding: 8px 12px;
+				transition: all 0.3s ease;
+			}
+
+			.menu-item:hover {
+				background-color: rgba(255, 255, 255, 0.1);
+				transform: translateY(-2px);
+			}
+		</style>
 	</head>
 	<body>
+		<div class="menu-container">
+			<div class="menu-item">
+				<a href="https://maschad.codes">Code</a>
+			</div>
+			<div class="menu-item">
+				<a href="#about">About</a>
+			</div>
+		</div>
+
 		<script type="module" src="main.js"></script>
 	</body>
 	<footer>
