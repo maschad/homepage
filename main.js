@@ -5,15 +5,36 @@ import { SDFGeometryGenerator } from 'three/addons/geometries/SDFGeometryGenerat
 import GUI from 'lil-gui';
 
 let renderer, meshFromSDF, scene, camera, clock, controls;
-let particles, particleSystem;
+let particleSystem;
 let particleVelocities = [];
+let mouse = new THREE.Vector2();
+let raycaster = new THREE.Raycaster();
+let plasmaStrands = [];
+let mouseSphere;
+let currentTypingInterval;
+let titleElement;
+let currentDisplayedTitle = '';
 
 const articles = [
-  { title: "Building a 3D Portfolio", link: "#article1", position: new THREE.Vector3(2, 1, 1) },
-  { title: "WebGL Shaders", link: "#article2", position: new THREE.Vector3(-2, 1, 0) },
-  { title: "Three.js Basics", link: "#article3", position: new THREE.Vector3(0, -2, 1) },
-  { title: "Particle Systems", link: "#article4", position: new THREE.Vector3(-1, 2, -1) },
-  { title: "JavaScript Performance", link: "#article5", position: new THREE.Vector3(1, -1, -2) }
+  // North
+  { title: "Anglican dialectical identity within post-structural Jamaica",
+    link: "#article1",
+    position: new THREE.Vector3(0, 4, 0) },
+
+  // East
+  { title: "Transient Tech, Persistent Pigmentocracy: Hidden Post-Colonial Hierarchies in Global Remote Work",
+    link: "#article2",
+    position: new THREE.Vector3(4, 0, 0) },
+
+  // South
+  { title: "Cybernetic Capital: Distributed Machines, Divided Labor",
+    link: "#article3",
+    position: new THREE.Vector3(0, -4, 0) },
+
+  // West
+  { title: "Subsidiarity in the Digital Age: Localized Cryptocurrencies as tools for reparatory economics in the Caribbean",
+    link: "#article4",
+    position: new THREE.Vector3(-4, 0, 0) }
 ];
 
 const settings = {
@@ -89,9 +110,62 @@ function init() {
 
   window.addEventListener("resize", onWindowResize);
   window.addEventListener("click", onParticleClick);
+  window.addEventListener('mousemove', onMouseMove);
 
   createParticles();
   compile();
+
+  // Create glowing mouse sphere
+  const sphereGeometry = new THREE.SphereGeometry(5, 32, 32);
+  const sphereMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+      time: { value: 0 }
+    },
+    vertexShader: `
+      varying vec3 vNormal;
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vNormal;
+      uniform float time;
+      void main() {
+        float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
+        vec3 glow = vec3(0.0, 1.0, 0.0) * intensity * 2.0;
+        gl_FragColor = vec4(glow, 1.0);
+      }
+    `,
+    transparent: true,
+    blending: THREE.AdditiveBlending
+  });
+
+  mouseSphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+  mouseSphere.visible = false;
+  scene.add(mouseSphere);
+
+  // Create plasma strands for each article
+  articles.forEach((article, index) => {
+    const strandGeometry = new THREE.BufferGeometry();
+    const strandPositions = new Float32Array(50 * 3); // 50 points per strand
+    strandGeometry.setAttribute('position', new THREE.BufferAttribute(strandPositions, 3));
+
+    // Create thick line using MeshLine
+    const strandMaterial = new THREE.LineBasicMaterial({
+      color: 0x00ff00,
+      transparent: true,
+      opacity: 0.0,
+      blending: THREE.AdditiveBlending,
+      linewidth: 5  // Note: linewidth only works in WebGL2
+    });
+
+    const strand = new THREE.Line(strandGeometry, strandMaterial);
+    plasmaStrands.push(strand);
+    scene.add(strand);
+  });
+
+  titleElement = document.getElementById('article-title');
 }
 
 function createParticles() {
@@ -159,20 +233,33 @@ function createParticles() {
 }
 
 function onParticleClick(event) {
-  const mouse = new THREE.Vector2(
-    (event.clientX / window.innerWidth) * 2 - 1,
-    -(event.clientY / window.innerHeight) * 2 + 1
-  );
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-  const raycaster = new THREE.Raycaster();
-  raycaster.params.Points.threshold = 10;
   raycaster.setFromCamera(mouse, camera);
-
-  const intersects = raycaster.intersectObject(particleSystem);
+  const intersects = raycaster.intersectObject(meshFromSDF);
 
   if (intersects.length > 0) {
-    const index = intersects[0].index;
-    window.location.href = articles[index].link;
+    // Find closest strand
+    let closestStrand = 0;
+    let closestDistance = Infinity;
+
+    plasmaStrands.forEach((strand, index) => {
+      const distance = intersects[0].point.distanceTo(new THREE.Vector3(
+        articles[index].position.x * 100,
+        articles[index].position.y * 100,
+        articles[index].position.z * 100
+      ));
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestStrand = index;
+      }
+    });
+
+    if (closestDistance < 300) { // Only trigger if close enough
+      window.location.href = articles[closestStrand].link;
+    }
   }
 }
 
@@ -294,5 +381,106 @@ function animate() {
 
   particleSystem.geometry.attributes.position.needsUpdate = true;
 
+  // Update plasma strands and mouse sphere
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObject(meshFromSDF);
+
+  if (intersects.length > 0) {
+    const intersectPoint = intersects[0].point;
+    mouseSphere.position.copy(intersectPoint);
+    mouseSphere.visible = true;
+
+    // Find closest article for title display
+    let closestArticle = null;
+    let closestDistance = Infinity;
+
+    articles.forEach((article, index) => {
+      const distance = intersectPoint.distanceTo(new THREE.Vector3(
+        article.position.x * 100,
+        article.position.y * 100,
+        article.position.z * 100
+      ));
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestArticle = article;
+      }
+    });
+
+    if (closestDistance < 500) {
+      typeText(closestArticle.title);
+    } else {
+      titleElement.style.opacity = '0';
+      currentDisplayedTitle = '';
+    }
+
+    // Update sphere glow
+    mouseSphere.material.uniforms.time.value = clock.getElapsedTime();
+
+    plasmaStrands.forEach((strand, index) => {
+      const positions = strand.geometry.attributes.position.array;
+      const article = articles[index];
+
+      const distance = intersectPoint.distanceTo(new THREE.Vector3(
+        article.position.x * 100,
+        article.position.y * 100,
+        article.position.z * 100
+      ));
+
+      // Enhanced strand animation
+      const maxDistance = 300;
+      const intensity = Math.max(0, 1 - (distance / maxDistance));
+      strand.material.opacity = intensity;
+
+      // Create more dramatic lightning-like path
+      for(let i = 0; i < positions.length; i += 3) {
+        const t = i / positions.length;
+        const noise = new THREE.Vector3(
+          (Math.random() - 0.5) * 15 * t,  // Increased noise
+          (Math.random() - 0.5) * 15 * t,
+          (Math.random() - 0.5) * 15 * t
+        );
+
+        positions[i] = intersectPoint.x * (1 - t) + article.position.x * 100 * t + noise.x;
+        positions[i + 1] = intersectPoint.y * (1 - t) + article.position.y * 100 * t + noise.y;
+        positions[i + 2] = intersectPoint.z * (1 - t) + article.position.z * 100 * t + noise.z;
+      }
+
+      strand.geometry.attributes.position.needsUpdate = true;
+    });
+  } else {
+    mouseSphere.visible = false;
+    titleElement.style.opacity = '0';
+    currentDisplayedTitle = '';
+    plasmaStrands.forEach(strand => {
+      strand.material.opacity *= 0.95;
+    });
+  }
+
   render();
+}
+
+function onMouseMove(event) {
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+}
+
+function typeText(text) {
+  if (text === currentDisplayedTitle) return;
+
+  currentDisplayedTitle = text;
+  if (currentTypingInterval) clearInterval(currentTypingInterval);
+
+  titleElement.style.opacity = '1';
+  let index = 0;
+  titleElement.textContent = '';
+
+  currentTypingInterval = setInterval(() => {
+    if (index < text.length) {
+      titleElement.textContent += text.charAt(index);
+      index++;
+    } else {
+      clearInterval(currentTypingInterval);
+    }
+  }, 50);
 }
