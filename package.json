@@ -12,7 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "highlight.js": "^11.11.1",
     "lil-gui": "^0.19.2",
+    "marked": "^15.0.6",
     "stats.js": "^0.17.0",
     "three": "^0.162.0"
   },

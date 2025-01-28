@@ -2,7 +2,8 @@ import * as THREE from "three";
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { SDFGeometryGenerator } from 'three/addons/geometries/SDFGeometryGenerator.js';
-import GUI from 'lil-gui';
+import { marked } from 'marked';
+import hljs from 'highlight.js';
 
 let renderer, meshFromSDF, scene, camera, clock, controls;
 let particleSystem;
@@ -17,23 +18,23 @@ let currentDisplayedTitle = '';
 
 const articles = [
   // North
-  { title: "Anglican dialectical identity within post-structural Jamaica",
-    link: "#article1",
+  { title: "Advanced Unit Testing in React Native",
+    link: "articles/advance_unit_testing_react_native.md",
     position: new THREE.Vector3(0, 4, 0) },
 
   // East
-  { title: "Transient Tech, Persistent Pigmentocracy: Hidden Post-Colonial Hierarchies in Global Remote Work",
-    link: "#article2",
+  { title: "Sovereign Parallelized Rollups",
+    link: "articles/sovereign_rollups.md",
     position: new THREE.Vector3(4, 0, 0) },
 
   // South
   { title: "Cybernetic Capital: Distributed Machines, Divided Labor",
-    link: "#article3",
+    link: "articles/cybernetic_capital.md",
     position: new THREE.Vector3(0, -4, 0) },
 
   // West
   { title: "Subsidiarity in the Digital Age: Localized Cryptocurrencies as tools for reparatory economics in the Caribbean",
-    link: "#article4",
+    link: "articles/subsidiarity_digital_age.md",
     position: new THREE.Vector3(-4, 0, 0) }
 ];
 
@@ -166,6 +167,12 @@ function init() {
   });
 
   titleElement = document.getElementById('article-title');
+
+  console.log("Articles configuration:", articles.map(a => ({
+    title: a.title,
+    link: a.link,
+    position: a.position
+  })));
 }
 
 function createParticles() {
@@ -232,12 +239,14 @@ function createParticles() {
   scene.add(particleSystem);
 }
 
-function onParticleClick(event) {
+async function onParticleClick(event) {
+  console.log("Click detected");
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObject(meshFromSDF);
+  console.log("Intersects:", intersects.length);
 
   if (intersects.length > 0) {
     // Find closest strand
@@ -251,14 +260,66 @@ function onParticleClick(event) {
         articles[index].position.z * 100
       ));
 
+      console.log(`Distance to article ${index}:`, distance);
+
       if (distance < closestDistance) {
         closestDistance = distance;
         closestStrand = index;
       }
     });
 
-    if (closestDistance < 300) { // Only trigger if close enough
-      window.location.href = articles[closestStrand].link;
+    console.log("Closest distance:", closestDistance);
+    console.log("Closest strand:", closestStrand);
+
+    if (closestDistance < 500) { // Changed from 300 to 500
+      const article = articles[closestStrand];
+      console.log("Attempting to fetch article:", article.link);
+
+      try {
+        const response = await fetch(article.link);
+        console.log("Fetch response:", response);
+
+        if (!response.ok) throw new Error('Article not found');
+
+        const markdown = await response.text();
+        console.log("Markdown loaded:", markdown.substring(0, 100) + "...");
+
+        const articleHTML = renderArticle(markdown);
+        console.log("Article HTML generated");
+
+        // Create or update article container
+        let articleContainer = document.getElementById('article-container');
+        if (!articleContainer) {
+          articleContainer = document.createElement('div');
+          articleContainer.id = 'article-container';
+          document.body.appendChild(articleContainer);
+        }
+
+        // Add close button and article content
+        articleContainer.innerHTML = `
+          <div class="article-overlay">
+            <button class="close-button">×</button>
+            ${articleHTML}
+          </div>
+        `;
+
+        console.log("Article container added to DOM");
+
+        // Add event listener to close button
+        document.querySelector('.close-button').addEventListener('click', () => {
+          articleContainer.remove();
+        });
+
+        // Add escape key listener
+        document.addEventListener('keydown', function closeOnEscape(e) {
+          if (e.key === 'Escape') {
+            articleContainer.remove();
+            document.removeEventListener('keydown', closeOnEscape);
+          }
+        });
+      } catch (error) {
+        console.error('Error loading article:', error);
+      }
     }
   }
 }
@@ -483,4 +544,42 @@ function typeText(text) {
       clearInterval(currentTypingInterval);
     }
   }, 50);
+}
+
+// Add this function to parse and render markdown articles
+function renderArticle(markdown) {
+    const sections = markdown.split('###');
+
+    // Parse title (first # section)
+    const titleMatch = sections[0].match(/# (.*?)\n/);
+    const title = titleMatch ? titleMatch[1] : '';
+
+    // Parse metadata (## section)
+    const metadataMatch = sections[0].match(/## Metadata\n\n([\s\S]*?)(?=\n{2}|$)/);
+    const metadata = metadataMatch ? metadataMatch[1] : '';
+
+    // Parse body (### section)
+    const body = sections[1] ? sections[1].replace('Body', '').trim() : '';
+
+    // Create HTML structure
+    const articleHTML = `
+        <div class="article-container">
+            <div class="article-title">${title}</div>
+            <div class="article-metadata">
+                <pre>${metadata}</pre>
+            </div>
+            <div class="article-body">
+                ${marked(body, {
+                    highlight: function(code, lang) {
+                        if (lang && hljs.getLanguage(lang)) {
+                            return hljs.highlight(code, { language: lang }).value;
+                        }
+                        return code;
+                    }
+                })}
+            </div>
+        </div>
+    `;
+
+    return articleHTML;
 }
