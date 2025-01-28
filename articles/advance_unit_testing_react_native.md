@@ -3,15 +3,14 @@
 ## Metadata
 
 Chad Nehemiah
-
 Published in
 Level Up Coding
-
 ·
 5 min read
 ·
 Jul 7, 2019
 
+[original article](https://medium.com/gitconnected/advanced-unit-and-snapshot-testing-with-react-native-ea746feb5b2e)
 
 ### Body
 

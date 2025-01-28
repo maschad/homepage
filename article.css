@@ -29,16 +29,79 @@
 }
 
 /* Code block styling */
-.article-body pre {
-    background: #1a1a1a;
-    padding: 15px;
-    border-radius: 5px;
-    overflow-x: auto;
+.code-block-container {
+    position: relative;
     margin: 1em 0;
+    padding: 1em;
+    background: #1e1e1e;
+    border-radius: 4px;
 }
 
-.article-body code {
+.code-block-container pre {
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+}
+
+.code-block-container code {
     font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.copy-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+    background: rgba(0, 255, 0, 0.1);
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    border-radius: 4px;
+    color: #00ff00;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.copy-button:hover {
+    background: rgba(0, 255, 0, 0.2);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.copy-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Syntax highlighting overrides */
+.hljs {
+    background: transparent;
+    color: #fff;
+}
+
+.hljs-keyword { color: #569cd6; }
+.hljs-string { color: #ce9178; }
+.hljs-number { color: #b5cea8; }
+.hljs-function { color: #dcdcaa; }
+.hljs-comment { color: #6a9955; }
+.hljs-variable { color: #9cdcfe; }
+.hljs-property { color: #9cdcfe; }
+.hljs-operator { color: #d4d4d4; }
+.hljs-punctuation { color: #d4d4d4; }
+
+/* Metadata link styling */
+.article-metadata a {
+    color: #00ff00;
+    text-decoration: none;
+}
+
+.article-metadata a:hover {
+    text-decoration: underline;
+    text-shadow: 0 0 5px #00ff00;
 }
 
 /* Add some spacing between sections */
@@ -74,4 +137,22 @@
 
 .close-button:hover {
     text-shadow: 0 0 10px #00ff00;
+}
+
+.original-article-link {
+    display: inline-block;
+    color: #00ff00;
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    background: rgba(0, 255, 0, 0.1);
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+    margin-top: 16px;
+}
+
+.original-article-link:hover {
+    background: rgba(0, 255, 0, 0.2);
+    text-shadow: 0 0 10px #00ff00;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
 }

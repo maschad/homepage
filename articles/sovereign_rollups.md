@@ -8,6 +8,8 @@ Chad
 0x04aF
 April 25th, 2024
 
+[original article](https://mirror.xyz/dashboard/edit/j6frWclHODtZokXWyFGuUcpwJzRyLVyMj-o8ooeq6ZE)
+
 ### Body
 
 In the true spirit of the rollup-centric ecosystem, this week I’m introducing new language to the space - hopefully it broadens the imagination of what an autonomous future could look like.
