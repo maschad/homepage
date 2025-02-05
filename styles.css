@@ -1,0 +1,114 @@
+.article-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.article-content {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #1a1a1a;
+  padding: 2rem;
+  border-radius: 8px;
+  color: #ffffff;
+}
+
+.close-button {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.code-block-container {
+  position: relative;
+  margin: 1rem 0;
+}
+
+.copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.copy-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+pre code.hljs {
+  padding: 1rem;
+  border-radius: 4px;
+  background: #2d2d2d;
+}
+
+.article-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #00ff00;
+}
+
+.article-metadata {
+  margin-bottom: 2rem;
+  color: #888;
+}
+
+.article-body {
+  line-height: 1.6;
+}
+
+.article-body h1,
+.article-body h2,
+.article-body h3 {
+  color: #00ff00;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.article-body a {
+  color: #00ff00;
+  text-decoration: none;
+}
+
+.article-body a:hover {
+  text-decoration: underline;
+}
+
+.original-article-link {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 255, 0, 0.1);
+  border-radius: 4px;
+  color: #00ff00;
+  text-decoration: none;
+}
+
+.original-article-link:hover {
+  background: rgba(0, 255, 0, 0.2);
+}
+
+.terminal-text {
+  cursor: pointer;
+  transition: text-shadow 0.3s ease;
+}
+
+.terminal-text:hover {
+  text-shadow: 0 0 15px #00ff00;
+}
