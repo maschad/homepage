@@ -8,19 +8,12 @@ import { SDFGeometryGenerator } from 'three/addons/geometries/SDFGeometryGenerat
 import { marked } from 'marked';
 import hljs from 'highlight.js';
 
-function Home() {
-  const navigate = useNavigate();
-  const sceneRef = useRef(null);
-  const mouseRef = useRef(new THREE.Vector2());
-  const raycasterRef = useRef(new THREE.Raycaster());
-  const meshRef = useRef(null);
-  const cameraRef = useRef(null);
-  const articlesRef = useRef([
+const articles = [
     // North
     {
-      title: "Advanced Unit Testing in React Native",
-      link: "articles/advance_unit_testing_react_native.md",
-      urlPath: "articles/advance_unit_testing_react_native",
+      title: "Joining Atoma",
+      link: "articles/joining_atoma.md",
+      urlPath: "articles/joining_atoma",
       position: new THREE.Vector3(0, 4, 0)
     },
     // East
@@ -29,22 +22,19 @@ function Home() {
       link: "articles/sovereign_rollups.md",
       urlPath: "articles/sovereign_rollups",
       position: new THREE.Vector3(4, 0, 0)
-    },
-    // South
-    {
-      title: "Cybernetic Capital: Distributed Machines, Divided Labor",
-      link: "articles/cybernetic_capital.md",
-      urlPath: "articles/cybernetic_capital",
-      position: new THREE.Vector3(0, -4, 0)
-    },
-    // West
-    {
-      title: "Subsidiarity in the Digital Age: Localized Cryptocurrencies as tools for reparatory economics in the Caribbean",
-      link: "articles/subsidiarity_digital_age.md",
-      urlPath: "articles/subsidiarity_digital_age",
-      position: new THREE.Vector3(-4, 0, 0)
     }
-  ]);
+  ]
+
+function Home() {
+  const navigate = useNavigate();
+  const sceneRef = useRef(null);
+  const mouseRef = useRef(new THREE.Vector2());
+  const raycasterRef = useRef(new THREE.Raycaster());
+  const meshRef = useRef(null);
+  const cameraRef = useRef(null);
+
+  const articlesRef = useRef(articles);
+
   const plasmaStrandsRef = useRef([]);
 
   const handleParticleClick = (event) => {
@@ -91,40 +81,6 @@ function Home() {
     let currentDisplayedTitle = '';
     let currentArticle = null;
     let isDirectArticleLoad = false;
-
-    const articles = [
-      // North
-      {
-        title: "Advanced Unit Testing in React Native",
-        link: "articles/advance_unit_testing_react_native.md", // file path
-        urlPath: "articles/advance_unit_testing_react_native", // URL path
-        position: new THREE.Vector3(0, 4, 0)
-      },
-
-      // East
-      {
-        title: "Sovereign Parallelized Rollups",
-        link: "articles/sovereign_rollups.md",
-        urlPath: "articles/sovereign_rollups",
-        position: new THREE.Vector3(4, 0, 0)
-      },
-
-      // South
-      {
-        title: "Cybernetic Capital: Distributed Machines, Divided Labor",
-        link: "articles/cybernetic_capital.md",
-        urlPath: "articles/cybernetic_capital",
-        position: new THREE.Vector3(0, -4, 0)
-      },
-
-      // West
-      {
-        title: "Subsidiarity in the Digital Age: Localized Cryptocurrencies as tools for reparatory economics in the Caribbean",
-        link: "articles/subsidiarity_digital_age.md",
-        urlPath: "articles/subsidiarity_digital_age",
-        position: new THREE.Vector3(-4, 0, 0)
-      }
-    ];
 
     const settings = {
       res: 4,

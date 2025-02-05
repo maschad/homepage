@@ -8,6 +8,23 @@ function Article() {
   const navigate = useNavigate();
   const [articleContent, setArticleContent] = useState('');
 
+  // Add useEffect for escape key handling
+  useEffect(() => {
+    function handleEscapeKey(event) {
+      if (event.key === 'Escape') {
+        handleClose();
+      }
+    }
+
+    // Add event listener
+    document.addEventListener('keydown', handleEscapeKey);
+
+    // Cleanup
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [navigate]);  // Add navigate to dependencies
+
   function renderArticle(markdown) {
     const sections = markdown.split('###');
 
