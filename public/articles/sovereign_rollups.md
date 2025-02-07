@@ -5,7 +5,7 @@
 
 Wallet Address: 0x04aF95dcA725dDDF04A0fF85F70282F51718560d
 
-Arweave Hash: F6LCxrrYjhYzL8bAm5a1fSSkIvYCs9ZMBhRJ-uDf3D4
+Arweave Txn Hash: F6LCxrrYjhYzL8bAm5a1fSSkIvYCs9ZMBhRJ-uDf3D4
 
 ·
 1 min read

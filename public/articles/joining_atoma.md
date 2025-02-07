@@ -4,7 +4,7 @@
 
 Wallet Address: 0x04aF95dcA725dDDF04A0fF85F70282F51718560d
 
-Arweave Hash: -8MkXwwtkeLIfwR2nZ5gHA5XzkLqYT-9mq4lEzjpMCY
+IPFS CID: bafkreigzsfbwnryv3ghuyrbuffcxdnu74xi2umfdg2wxy7dysvdhdqznvq
 
 ·
 1 min read
