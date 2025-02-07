@@ -3,12 +3,16 @@
 
 ## Metadata
 
-0x04aF95dcA725dDDF04A0fF85F70282F51718560d
-Chad
-0x04aF
+Wallet Address: 0x04aF95dcA725dDDF04A0fF85F70282F51718560d
+
+Arweave Hash: F6LCxrrYjhYzL8bAm5a1fSSkIvYCs9ZMBhRJ-uDf3D4
+
+·
+1 min read
+·
 April 25th, 2024
 
-[original article](https://mirror.xyz/dashboard/edit/j6frWclHODtZokXWyFGuUcpwJzRyLVyMj-o8ooeq6ZE)
+[original article](https://mirror.xyz/chadnehemiah.eth/j6frWclHODtZokXWyFGuUcpwJzRyLVyMj-o8ooeq6ZE)
 
 ### Body
 
