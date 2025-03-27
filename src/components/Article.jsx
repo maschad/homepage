@@ -1,3 +1,4 @@
+// Article.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { marked } from 'marked';
@@ -8,7 +9,13 @@ function Article() {
   const navigate = useNavigate();
   const [articleContent, setArticleContent] = useState('');
 
-  // Add useEffect for escape key handling
+  useEffect(() => {
+    document.body.classList.add('article-open');
+    return () => {
+      document.body.classList.remove('article-open');
+    };
+  }, []);
+
   useEffect(() => {
     function handleEscapeKey(event) {
       if (event.key === 'Escape') {
@@ -16,49 +23,34 @@ function Article() {
       }
     }
 
-    // Add event listener
     document.addEventListener('keydown', handleEscapeKey);
-
-    // Cleanup
-    return () => {
-      document.removeEventListener('keydown', handleEscapeKey);
-    };
-  }, [navigate]);  // Add navigate to dependencies
+    return () => document.removeEventListener('keydown', handleEscapeKey);
+  }, [navigate]);
 
   function renderArticle(markdown) {
     const sections = markdown.split('###');
-
-    // Parse title (first # section)
     const titleMatch = sections[0].match(/# (.*?)\n/);
     const title = titleMatch ? titleMatch[1] : '';
-
-    // Parse metadata section (everything between ## Metadata and ### Body)
     const metadataSection = sections[0].split('## Metadata')[1];
     if (!metadataSection) return 'Error: No metadata section found';
 
-    // Split metadata into lines and process them
     const metadataLines = metadataSection
       .split('\n')
-      .filter(line => line.trim() !== '');
-
-    // Process each line, with special handling for [original article] link
-    const processedMetadataLines = metadataLines.map(line => {
-      if (line.includes('[original article]')) {
-        const match = line.match(/\[original article\]\((.*?)\)/);
-        if (match) {
-          const url = match[1];
-          return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="original-article-link">original article</a>`;
+      .filter(line => line.trim() !== '')
+      .map(line => {
+        if (line.includes('[original article]')) {
+          const match = line.match(/\[original article\]\((.*?)\)/);
+          if (match) {
+            const url = match[1];
+            return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="inline-block mt-4 px-4 py-2 border border-terminal rounded hover:bg-terminal/10 transition font-bold text-center">original article</a>`;
+          }
         }
-      }
-      return line;
-    });
+        return `<p>${line}</p>`;
+      })
+      .join('\n');
 
-    const metadata = processedMetadataLines.join('\n');
-
-    // Parse body (### section)
     const body = sections[1] ? sections[1].replace('Body', '').trim() : '';
 
-    // Configure marked with highlighting and custom renderer
     marked.setOptions({
       highlight: function(code, lang) {
         if (!code) return '';
@@ -70,37 +62,32 @@ function Article() {
       langPrefix: 'hljs language-'
     });
 
-    // Custom renderer to wrap code blocks in copyable container
     const renderer = new marked.Renderer();
-    renderer.code = function(code, language) {
+    renderer.code = function (code, language) {
       const codeText = typeof code === 'object' ? code.text : code;
       const codeLang = typeof code === 'object' ? code.lang : language;
-
-      if (!codeText) return '';
-
       const validLanguage = codeLang && hljs.getLanguage(codeLang) ? codeLang : 'plaintext';
       const highlightedCode = hljs.highlight(codeText, { language: validLanguage }).value;
 
       return `
-        <div class="code-block-container">
-          <button class="copy-button" data-code="${encodeURIComponent(codeText)}">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-            </svg>
-          </button>
+        <div class="relative bg-neutral-900 p-4 rounded shadow mt-4 mb-4">
+          <button class="absolute top-2 right-2 text-green-400 hover:text-green-300" data-code="${encodeURIComponent(
+            codeText
+          )}">📋</button>
           <pre><code class="hljs language-${validLanguage}">${highlightedCode}</code></pre>
         </div>
       `;
     };
 
     return `
-      <div class="article-container">
-        <div class="article-title">${title}</div>
-        <div class="article-metadata">
-          <pre>${metadata}</pre>
+      <div class="max-w-3xl mx-auto font-mono text-[#a8ff60]">
+        <h1 class="text-4xl sm:text-5xl font-bold text-center mb-8 text-[#00ff00] drop-shadow-[0_0_8px_#00ff00]">
+          ${title.replace(/\n/g, '<br/>')}
+        </h1>
+        <div class="bg-[#002200] text-green-200 p-4 border-l-4 border-[#00ff00] rounded mb-8 text-sm">
+          ${metadataLines}
         </div>
-        <div class="article-body">
+        <div class="prose prose-invert prose-green max-w-none text-[#a8ff60] font-mono prose-h1:text-[#00ff00] prose-h2:text-[#00ff00] prose-a:text-[#00ff00] prose-a:no-underline hover:prose-a:underline prose-pre:bg-[#111] prose-code:text-green-300">
           ${marked(body, { renderer })}
         </div>
       </div>
@@ -117,7 +104,6 @@ function Article() {
         const articleHTML = renderArticle(markdown);
         setArticleContent(articleHTML);
 
-        // Setup copy buttons after content is rendered
         setTimeout(() => {
           setupCopyButtons();
         }, 0);
@@ -125,12 +111,11 @@ function Article() {
         console.error('Error loading article:', error);
       }
     }
-
     loadArticle();
   }, [articleId]);
 
   function setupCopyButtons() {
-    document.querySelectorAll('.copy-button').forEach(button => {
+    document.querySelectorAll('button[data-code]').forEach(button => {
       button.addEventListener('click', () => {
         const code = decodeURIComponent(button.dataset.code);
         navigator.clipboard.writeText(code);
@@ -143,10 +128,24 @@ function Article() {
   }
 
   return (
-    <div className="article-overlay">
-      <button className="close-button" onClick={handleClose}>×</button>
-      <div className="article-content"
-           dangerouslySetInnerHTML={{ __html: articleContent }} />
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center article">
+      {/* Full Black Background Layer */}
+      <div className="fixed inset-0 bg-black z-[-1]" />
+
+      {/* Article Content Layer */}
+      <div className="relative w-full max-w-3xl overflow-y-auto px-4 py-10 font-mono text-[#a8ff60]">
+        <button
+          className="fixed top-4 right-4 text-terminal text-3xl hover:drop-shadow-green-glow z-[10000]"
+          onClick={handleClose}
+        >
+          ×
+        </button>
+
+        <div
+          className="prose prose-invert prose-green"
+          dangerouslySetInnerHTML={{ __html: articleContent }}
+        />
+      </div>
     </div>
   );
 }
