@@ -13,7 +13,7 @@ Thursday, 06 Feb 2025
 
 [original article](https://mirror.xyz/chadnehemiah.eth/WLiRxlJ7R7yUIdLfQUJ9u_Tw9rKF8fLmpCznepY930U)
 
-### Body
+## Body
 
 I'm thrilled to announce that I've joined [Atoma Network](https://atoma.network) — a visionary project redefining the future of artificial intelligence through decentralization, confidential computing, and a staunch commitment to privacy in a completely transparent way. This is all a part of the journey towards data sovereignty.
 
