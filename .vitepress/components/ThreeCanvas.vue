@@ -84,7 +84,7 @@ const articles = [
   {
     title: "Joining Atoma",
     link: "/articles/joining-atoma.md",
-    urlPath: "/joining-atoma",
+    urlPath: "/articles/joining-atoma",
     position: new THREE.Vector3(0, 4, 0),
   },
   {
