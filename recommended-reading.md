@@ -1,6 +1,8 @@
 # Recommended *non-technical* material
 
+- [10 Drugs: How Plants, Powders, and Pills Have Shaped the History of Medicine](https://pmc.ncbi.nlm.nih.gov/articles/PMC7309658/) by [Thomas Hager](https://en.wikipedia.org/wiki/Thomas_Hager)
 - [A Confession](https://theanarchistlibrary.org/library/leo-tolstoy-a-confession) by [Leo Tolstoy](https://en.wikipedia.org/wiki/Leo_Tolstoy)
+- [Alchemy of Happiness](https://en.wikipedia.org/wiki/The_Alchemy_of_Happiness) by [Al-Ghazali](https://en.wikipedia.org/wiki/Al-GhazaliThe )
 - [Artificial Unintelligence](https://mitpress.mit.edu/9780262537018/artificial-unintelligence/) by [Meredith Broussard](https://en.wikipedia.org/wiki/Meredith_Broussard)
 - [Astrotopia](https://press.uchicago.edu/ucp/books/book/chicago/A/bo184287883.html) by [Mary-Jane Rubenstein](https://en.wikipedia.org/wiki/Mary-Jane_Rubenstein)
 - [Attention Merchants](https://scholarship.law.columbia.edu/books/64/) by [Tim Wu](https://en.wikipedia.org/wiki/Tim_Wu)
@@ -32,6 +34,7 @@
 - [The Cartographer tries to Map a Way To Zion](https://www.goodreads.com/book/show/20763601-the-cartographer-tries-to-map-a-way-to-zion) by [Kei Miller](https://en.wikipedia.org/wiki/Kei_Miller)
 - [The Communist Manifesto](https://en.wikipedia.org/wiki/The_Communist_Manifesto) by [Karl Marx and Friedrich Engels](https://en.wikipedia.org/wiki/Karl_Marx)
 - [The Divine Comedy](https://www.britannica.com/topic/The-Divine-Comedy) by [Dante Alighieri](https://en.wikipedia.org/wiki/Dante_Alighieri)
+- [The Ottoman Empire](https://www.goodreads.com/book/show/35246283-the-ottoman-empire) by [Kenneth W. Harl](https://en.wikipedia.org/wiki/Kenneth_W._Harl)
 - [THe Prince](https://www.britannica.com/topic/The-Prince) by [Niccolò Machiavelli](https://en.wikipedia.org/wiki/Niccol%C3%B2_Machiavelli)
 - [The Protestant Ethic and the Spirit of Capitalism](https://en.wikipedia.org/wiki/The_Protestant_Ethic_and_the_Spirit_of_Capitalism) by [Max Weber](https://en.wikipedia.org/wiki/Max_Weber)
 - [The Scandal of the Evangelical Mind](https://christianscholars.com/the-scandal-of-the-evangelical-mind-with-a-new-preface-and-afterword/) by [Mark A. Noll](https://en.wikipedia.org/wiki/Mark_Noll)
