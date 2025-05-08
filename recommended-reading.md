@@ -1,4 +1,4 @@
-# Recommended *non-technical* material
+# Recommended *non-technical* Literature
 
 - [10 Drugs: How Plants, Powders, and Pills Have Shaped the History of Medicine](https://pmc.ncbi.nlm.nih.gov/articles/PMC7309658/) by [Thomas Hager](https://en.wikipedia.org/wiki/Thomas_Hager)
 - [A Confession](https://theanarchistlibrary.org/library/leo-tolstoy-a-confession) by [Leo Tolstoy](https://en.wikipedia.org/wiki/Leo_Tolstoy)

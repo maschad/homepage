@@ -83,6 +83,8 @@ const router = useRouter();
 const articles = [
   {
     title: "Spend less time on your phone",
+    link: "/recommended-reading",
+    urlPath: "/recommended-reading",
     position: new THREE.Vector3(0, 4, 0),
   },
 ];
