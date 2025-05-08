@@ -82,22 +82,8 @@ const router = useRouter();
 
 const articles = [
   {
-    title: "Joining Atoma",
-    link: "/articles/joining-atoma.md",
-    urlPath: "/articles/joining-atoma",
+    title: "Spend less time on your phone",
     position: new THREE.Vector3(0, 4, 0),
-  },
-  {
-    title: "Sovereign Parallelized Rollups",
-    link: "/articles/sovereign-rollups.md",
-    urlPath: "/articles/sovereign-rollups",
-    position: new THREE.Vector3(4, 0, 0),
-  },
-  {
-    title: "Traditional Church Decline in Jamaica",
-    link: "/articles/trad-church-decline.md",
-    urlPath: "/articles/trad-church-decline",
-    position: new THREE.Vector3(0, -4, 0),
   },
 ];
 
