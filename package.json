@@ -2,6 +2,9 @@
   "name": "personal-website",
   "version": "2.0.0",
   "description": "my personal website",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
@@ -10,10 +13,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "three": "^0.175.0"
+    "three": "^0.179.1"
   },
   "devDependencies": {
-    "vite": "^5.2.3",
-    "vitepress": "^1.6.3"
+    "vite": "^7.1.4",
+    "vitepress": "^1.6.4"
   }
 }
