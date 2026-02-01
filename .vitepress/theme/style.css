@@ -1,0 +1,129 @@
+/* Particle background integration: nav and content on top with readable text */
+
+/* Ensure canvas stays behind (already in index.css) and page uses dark base */
+:root {
+  color-scheme: dark;
+  --vp-c-bg: transparent;
+  --vp-c-bg-alt: rgba(10, 10, 15, 0.85);
+  --vp-c-bg-elv: rgba(10, 10, 15, 0.9);
+  --vp-c-text-1: #e4e4e7;
+  --vp-c-text-2: #a1a1aa;
+  --vp-c-text-3: #71717a;
+  --vp-c-divider: rgba(255, 255, 255, 0.12);
+  --vp-c-brand-1: #a78bfa;
+  --vp-c-brand-2: #c4b5fd;
+
+  /* Default theme component backgrounds (avoid relying on classnames) */
+  --vp-nav-bg-color: rgba(10, 10, 15, 0.75);
+  --vp-nav-screen-bg-color: rgba(10, 10, 15, 0.9);
+  --vp-local-nav-bg-color: rgba(10, 10, 15, 0.75);
+  --vp-sidebar-bg-color: rgba(10, 10, 15, 0.7);
+}
+
+body {
+  color: var(--vp-c-text-1);
+}
+
+/* Nav bar: semi-transparent so particles show through */
+.VPNavBar,
+.VPNavBar.has-sidebar {
+  background: rgba(10, 10, 15, 0.75) !important;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.VPNavBar .link,
+.VPNavBar .VPNavBarTitle,
+.VPNavBar a {
+  color: var(--vp-c-text-1) !important;
+}
+
+.VPNavBar .link:hover,
+.VPNavBar a:hover {
+  color: var(--vp-c-brand-2) !important;
+}
+
+/* Sidebar */
+.VPSidebar {
+  background: rgba(10, 10, 15, 0.7) !important;
+  backdrop-filter: blur(8px);
+}
+
+.VPSidebar .link {
+  color: var(--vp-c-text-2) !important;
+}
+
+.VPSidebar .link:hover,
+.VPSidebar .link.active {
+  color: var(--vp-c-brand-2) !important;
+}
+
+/* Main content area: transparent so particles show through */
+.VPContent,
+.vp-doc {
+  background: transparent !important;
+}
+
+.vp-doc p,
+.vp-doc li,
+.vp-doc td,
+.vp-doc th,
+.vp-doc blockquote {
+  color: var(--vp-c-text-1) !important;
+}
+
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3,
+.vp-doc h4,
+.vp-doc h5,
+.vp-doc h6 {
+  color: var(--vp-c-text-1) !important;
+  border-color: var(--vp-c-divider) !important;
+}
+
+.vp-doc a {
+  color: var(--vp-c-brand-2) !important;
+}
+
+.vp-doc a:hover {
+  color: var(--vp-c-brand-1) !important;
+}
+
+/* Home layout hero text */
+.VPHero .name,
+.VPHero .text,
+.VPHero .tagline {
+  color: var(--vp-c-text-1) !important;
+}
+
+.VPHero .clip {
+  background: linear-gradient(135deg, var(--vp-c-brand-1), var(--vp-c-brand-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Code blocks: keep readable on dark */
+.vp-doc div[class*='language-'] {
+  background: rgba(10, 10, 15, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.vp-doc div[class*='language-'] code {
+  color: var(--vp-c-text-1) !important;
+}
+
+/* Social links and other accents */
+.VPNavBarSocialLink .icon {
+  fill: var(--vp-c-text-2);
+}
+
+.VPNavBarSocialLink:hover .icon {
+  fill: var(--vp-c-brand-2);
+}
+
+/* dat.gui: remove the "Open/Close Controls" toggle label */
+.dg .close-button {
+  display: none !important;
+}

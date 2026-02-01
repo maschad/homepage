@@ -18,3 +18,8 @@ html, body {
   z-index: -1;
   pointer-events: none;
 }
+
+/* dat.gui: hide the "Open/Close Controls" toggle label */
+.dg .close-button {
+  display: none !important;
+}

@@ -72,25 +72,11 @@ export default new class {
 
   setGui() {
     this.tweaks = {
-      pointSize: 1.2,
-      speed: 0.3,
+      pointSize: 1,
+      speed: 1,
       curlFreq: 0.25,
-      opacity: 0.35,
+      opacity: 0.36,
     };
-
-    GUI.add(this.tweaks, 'pointSize', 1, 3, 0.1)
-       .name('particle size')
-       .onChange(() => this.renderMaterial.uniforms.uPointSize.value = this.tweaks.pointSize);
-
-    GUI.add(this.tweaks, 'speed', 0.0, 1, 0.001)
-       .onChange(() => this.simMaterial.uniforms.uSpeed.value = this.tweaks.speed);
-
-    GUI.add(this.tweaks, 'curlFreq', 0, 0.6, 0.01)
-       .name('noise frequency')
-       .onChange(() => this.simMaterial.uniforms.uCurlFreq.value = this.tweaks.curlFreq);
-
-    GUI.add(this.tweaks, 'opacity', 0.1, 1.0, 0.01)
-       .onChange(() => this.renderMaterial.uniforms.uOpacity.value = this.tweaks.opacity);
   }
 
   createFBO() {

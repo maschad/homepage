@@ -1,14 +1,17 @@
 import DefaultTheme from 'vitepress/theme'
 import type { Theme } from 'vitepress'
 
-// Global styles and WebGL canvas background (same as index.html experience)
-import '../src/styles/index.scss'
+// Particle canvas background (same as standalone index.html)
+import '../../src/styles/index.css'
+// Overrides so nav and content sit on top of the canvas
+import './style.css'
 
 export default {
   extends: DefaultTheme,
   enhanceApp() {
-    // Run WebGL app only in the browser (no document/window during SSR)
     if (typeof window === 'undefined') return
-    import('../src/scripts/app.js')
+    import('../../src/scripts/app.js').catch((err) => {
+      console.error('[particles] failed to load background app', err)
+    })
   }
 } satisfies Theme
