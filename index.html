@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maschad</title>
+    <link rel="stylesheet" href="/src/styles/index.css">
+  </head>
+  <body>
+    <header class="site-header" data-site-header>
+      <a class="site-brand" href="/" aria-label="Home">††</a>
+
+      <button
+        class="site-menu-button"
+        type="button"
+        aria-label="Open menu"
+        aria-controls="site-menu"
+        aria-expanded="false"
+        data-site-menu-button
+      >
+        <span class="sr-only">Menu</span>
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+
+      <nav class="site-menu" id="site-menu" aria-label="Primary navigation" data-site-menu>
+        <a class="site-link" href="/recommended-reading.html">Recommended Reading</a>
+        <a class="site-link" href="https://www.maschad.codes/" target="_blank" rel="noreferrer">Code</a>
+      </nav>
+    </header>
+
+    <div class="site-menu-backdrop" hidden data-site-menu-backdrop></div>
+
+    <script>
+      (() => {
+        const header = document.querySelector('[data-site-header]');
+        const button = document.querySelector('[data-site-menu-button]');
+        const menu = document.querySelector('[data-site-menu]');
+        const backdrop = document.querySelector('[data-site-menu-backdrop]');
+
+        if (!header || !button || !menu || !backdrop) return;
+
+        const setOpen = (open) => {
+          header.classList.toggle('is-menu-open', open);
+          button.setAttribute('aria-expanded', open ? 'true' : 'false');
+          button.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+          backdrop.hidden = !open;
+        };
+
+        button.addEventListener('click', () => {
+          const isOpen = button.getAttribute('aria-expanded') === 'true';
+          setOpen(!isOpen);
+        });
+
+        backdrop.addEventListener('click', () => setOpen(false));
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') setOpen(false);
+        });
+
+        // Close after navigating via menu item (mobile UX)
+        menu.addEventListener('click', (e) => {
+          const a = e.target && e.target.closest ? e.target.closest('a') : null;
+          if (a) setOpen(false);
+        });
+      })();
+    </script>
+
+    <script type="module" src="/src/scripts/app.js"></script>
+  </body>
+</html>

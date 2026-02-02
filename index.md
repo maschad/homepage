@@ -6,5 +6,3 @@ hero:
   name: "𓂀"
   tagline:
 ---
-
-<ThreeCanvas />

@@ -1,0 +1,304 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background: #0a0a0f;
+  min-height: 100%;
+}
+
+.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ---------- Site header / hamburger nav (VitePress-ish) ---------- */
+:root {
+  --header-bg: rgba(10, 10, 15, 0.64);
+  --header-border: rgba(255, 255, 255, 0.08);
+  --text: rgba(255, 255, 255, 0.92);
+  --text-muted: rgba(255, 255, 255, 0.72);
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: calc(10px + env(safe-area-inset-top)) 14px 10px;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--header-border);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.site-brand {
+  color: var(--text);
+  text-decoration: none;
+  font: 600 16px/1 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  letter-spacing: 0.02em;
+}
+
+.site-menu-button {
+  appearance: none;
+  border: 1px solid var(--header-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  width: 42px;
+  height: 36px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.site-menu-button:focus-visible {
+  outline: 2px solid rgba(120, 160, 255, 0.9);
+  outline-offset: 2px;
+}
+
+.hamburger {
+  position: relative;
+  width: 18px;
+  height: 12px;
+  display: inline-block;
+}
+
+.hamburger::before,
+.hamburger::after,
+.hamburger {
+  background: transparent;
+}
+
+.hamburger::before,
+.hamburger::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--text);
+  transition: transform 160ms ease, top 160ms ease, opacity 160ms ease;
+}
+
+.hamburger::before { top: 2px; }
+.hamburger::after { top: 8px; }
+
+.site-menu {
+  position: absolute;
+  top: 100%;
+  right: 10px;
+  left: 10px;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid var(--header-border);
+  border-radius: 14px;
+  background: rgba(10, 10, 15, 0.92);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  display: grid;
+  gap: 6px;
+  transform-origin: top;
+  transform: scale(0.98);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.site-link {
+  color: var(--text);
+  text-decoration: none;
+  font: 500 14px/1.2 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  padding: 10px 10px;
+  border-radius: 10px;
+}
+
+.site-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.site-link:focus-visible {
+  outline: 2px solid rgba(120, 160, 255, 0.9);
+  outline-offset: 2px;
+}
+
+.site-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 15;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.site-header.is-menu-open .site-menu {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.site-header.is-menu-open .hamburger::before {
+  top: 5px;
+  transform: rotate(45deg);
+}
+
+.site-header.is-menu-open .hamburger::after {
+  top: 5px;
+  transform: rotate(-45deg);
+}
+
+@media (min-width: 760px) {
+  .site-menu-backdrop { display: none; }
+
+  .site-menu-button { display: none; }
+
+  .site-menu {
+    position: static;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    display: flex;
+    gap: 6px;
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+    transition: none;
+  }
+
+  .site-link {
+    color: var(--text-muted);
+    padding: 8px 10px;
+  }
+
+  .site-link:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-menu,
+  .hamburger::before,
+  .hamburger::after {
+    transition: none;
+  }
+}
+
+/* ---------- Simple page layout (for linked pages) ---------- */
+.page {
+  min-height: 100vh;
+  padding-top: 70px; /* header */
+  padding-top: calc(70px + env(safe-area-inset-top));
+  color: var(--text);
+}
+
+.content {
+  width: min(920px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 18px 0 52px;
+}
+
+.reading-header {
+  margin: 10px 0 18px;
+}
+
+.reading-title {
+  font: 700 28px/1.1 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  letter-spacing: -0.02em;
+}
+
+.reading-subtitle {
+  margin-top: 8px;
+  color: var(--text-muted);
+  font: 400 14px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+
+.reading-body {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--header-border);
+  border-radius: 16px;
+  padding: 16px;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.reading-h2 {
+  margin: 8px 0 10px;
+  font: 650 18px/1.2 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+
+.reading-h3 {
+  margin: 10px 0 8px;
+  font: 650 16px/1.2 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  color: var(--text-muted);
+}
+
+.reading-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+  display: grid;
+  gap: 10px;
+}
+
+.reading-item {
+  padding: 10px 10px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font: 450 14px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+
+.reading-item a,
+.reading-p a {
+  color: rgba(170, 200, 255, 0.95);
+  text-decoration: none;
+}
+
+.reading-item a:hover,
+.reading-p a:hover {
+  text-decoration: underline;
+}
+
+.reading-p {
+  margin: 8px 0;
+  color: var(--text-muted);
+  font: 400 14px/1.6 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+
+.reading-loading,
+.reading-error {
+  color: var(--text-muted);
+  font: 400 14px/1.6 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+
+/* dat.gui: hide the "Open/Close Controls" toggle label */
+.dg .close-button {
+  display: none !important;
+}
