@@ -9,7 +9,7 @@
     "dev": "parcel index.html recommended-reading.html",
     "build": "parcel build index.html recommended-reading.html"
   },
-  "author": "",
+  "author": "Chad Nehemiah <chad.nehemiah94@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "dat.gui": "^0.7.7",
