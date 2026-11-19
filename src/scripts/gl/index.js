@@ -13,6 +13,8 @@ import particlesVertex from './shaders/particles.vert';
 import particlesFragment from './shaders/particles.frag';
 import fullScreenVertex from './shaders/fullscreen.vert';
 import fullScreenFragment from './shaders/fullscreen.frag';
+import eyeVertex from './shaders/eye.vert';
+import eyeFragment from './shaders/eye.frag';
 
 import { getRandomSpherePoint } from '../utils';
 
@@ -26,7 +28,7 @@ export default new class {
     });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     this.renderer.setSize(store.bounds.ww, store.bounds.wh);
-    this.renderer.setClearColor(0x0a0a0f, 1);
+    this.renderer.setClearColor(0x121110, 1);
 
     this.camera = new THREE.PerspectiveCamera(
       45,
@@ -55,6 +57,7 @@ export default new class {
     this.setGui();
     this.createFBO();
     this.createScreenQuad();
+    this.createEye();
     // Ensure first frame renders (in case ticker hasn't fired yet)
     requestAnimationFrame(() => this.render());
   }
@@ -75,7 +78,10 @@ export default new class {
       pointSize: 1,
       speed: 1,
       curlFreq: 0.25,
-      opacity: 0.36,
+      opacity: 0.3,
+      bandFreq: 3.2,
+      bandSpeed: 0.035,
+      bandLow: 0.1,
     };
   }
 
@@ -127,6 +133,10 @@ export default new class {
         uTime: { value: 0 },
         uPointSize: { value: this.tweaks.pointSize },
         uOpacity: { value: this.tweaks.opacity },
+        uColor: { value: new THREE.Color(0xece8dc) },
+        uBandFreq: { value: this.tweaks.bandFreq },
+        uBandSpeed: { value: this.tweaks.bandSpeed },
+        uBandLow: { value: this.tweaks.bandLow },
       },
       transparent: true,
       blending: THREE.AdditiveBlending
@@ -155,6 +165,73 @@ export default new class {
     this.scene.add(this.fullScreenQuad);
   }
 
+  createEye() {
+    // A single red "eye" on the cloud, always facing the camera.
+    // It drifts toward the cursor and returns home when the cursor rests.
+    const geometry = new THREE.PlaneGeometry(0.6, 0.6);
+    const material = new THREE.ShaderMaterial({
+      vertexShader: eyeVertex,
+      fragmentShader: eyeFragment,
+      uniforms: {
+        uTime: { value: 0 },
+        uActive: { value: 0 },
+        uColor: { value: new THREE.Color(0xff4a3d) },
+      },
+      transparent: true,
+      depthTest: false,
+      depthWrite: false,
+    });
+
+    this.eyeHome = new THREE.Vector3(-0.55, -0.12, 0.6);
+    this.eyeTarget = this.eyeHome.clone();
+    this.eyeActive = 0;
+    this.lastPointerMove = 0;
+
+    this.eye = new THREE.Mesh(geometry, material);
+    this.eye.position.copy(this.eyeHome);
+    this.eye.renderOrder = 10;
+    this.scene.add(this.eye);
+
+    // The canvas ignores pointer events, so listen on the window
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -this.eyeHome.z);
+    const hit = new THREE.Vector3();
+    const maxReach = 1.3;
+
+    window.addEventListener('pointermove', (e) => {
+      pointer.set(
+        (e.clientX / window.innerWidth) * 2 - 1,
+        -(e.clientY / window.innerHeight) * 2 + 1
+      );
+      raycaster.setFromCamera(pointer, this.camera);
+
+      if (raycaster.ray.intersectPlane(plane, hit)) {
+        const reach = Math.hypot(hit.x, hit.y);
+        const k = reach > maxReach ? maxReach / reach : 1;
+        this.eyeTarget.set(hit.x * k, hit.y * k, this.eyeHome.z);
+      }
+
+      this.lastPointerMove = performance.now();
+    }, { passive: true });
+
+    document.documentElement.addEventListener('mouseleave', () => {
+      this.lastPointerMove = 0;
+    });
+  }
+
+  updateEye() {
+    const resting = performance.now() - this.lastPointerMove > 2500;
+    const target = resting ? this.eyeHome : this.eyeTarget;
+
+    this.eye.position.lerp(target, resting ? 0.025 : 0.08);
+    this.eyeActive += ((resting ? 0 : 1) - this.eyeActive) * 0.05;
+
+    this.eye.quaternion.copy(this.camera.quaternion);
+    this.eye.material.uniforms.uTime.value = this.time;
+    this.eye.material.uniforms.uActive.value = this.eyeActive;
+  }
+
   resize() {
     let width = store.bounds.ww;
     let height = store.bounds.wh;
@@ -176,6 +253,9 @@ export default new class {
     this.fbo.update(this.time);
 
     this.fullScreenQuad.material.uniforms.uTime.value = this.time;
+    this.renderMaterial.uniforms.uTime.value = this.time;
+
+    this.updateEye();
 
     this.renderer.render(this.scene, this.camera);
   }
