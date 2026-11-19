@@ -1,3 +1,22 @@
+/* ==========================================================
+   Maschad: retro sci-fi poster look
+   Warm charcoal ground, bone ink, one signal red.
+   ========================================================== */
+
+:root {
+  --bg: #121110;
+  --bone: #ece8dc;
+  --bone-bright: #f2eee2;
+  --slate: #9aa9aa;
+  --slate-dim: #8c9a9b;
+  --signal: #ff4a3d;
+  --rule: rgba(236, 232, 220, 0.14);
+
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-body: "Barlow", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,8 +24,15 @@
 }
 
 html, body {
-  background: #0a0a0f;
+  background: var(--bg);
   min-height: 100%;
+  color: var(--bone);
+  font-family: var(--font-mono);
+}
+
+::selection {
+  background: var(--signal);
+  color: var(--bg);
 }
 
 .webgl {
@@ -19,12 +45,16 @@ html, body {
   pointer-events: none;
 }
 
-/* ---------- Site header / hamburger nav (VitePress-ish) ---------- */
-:root {
-  --header-bg: rgba(10, 10, 15, 0.64);
-  --header-border: rgba(255, 255, 255, 0.08);
-  --text: rgba(255, 255, 255, 0.92);
-  --text-muted: rgba(255, 255, 255, 0.72);
+/* Print grain over everything */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  background-image: url("/public/grain.png");
+  background-size: 256px 256px;
+  mix-blend-mode: overlay;
+  opacity: 0.9;
 }
 
 .sr-only {
@@ -39,6 +69,7 @@ html, body {
   border: 0 !important;
 }
 
+/* ---------- Header ---------- */
 .site-header {
   position: fixed;
   top: 0;
@@ -49,37 +80,40 @@ html, body {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: calc(10px + env(safe-area-inset-top)) 14px 10px;
-  background: var(--header-bg);
-  border-bottom: 1px solid var(--header-border);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  padding: calc(20px + env(safe-area-inset-top)) 28px 20px;
 }
 
 .site-brand {
-  color: var(--text);
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--signal);
+  color: var(--signal);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 14px/1 var(--font-mono);
   text-decoration: none;
-  font: 600 16px/1 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-  letter-spacing: 0.02em;
+}
+
+.site-brand:focus-visible,
+.site-link:focus-visible,
+.site-menu-button:focus-visible,
+.reading-item a:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
 }
 
 .site-menu-button {
   appearance: none;
-  border: 1px solid var(--header-border);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text);
-  width: 42px;
-  height: 36px;
-  border-radius: 10px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--bone);
+  width: 44px;
+  height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-}
-
-.site-menu-button:focus-visible {
-  outline: 2px solid rgba(120, 160, 255, 0.9);
-  outline-offset: 2px;
 }
 
 .hamburger {
@@ -90,21 +124,14 @@ html, body {
 }
 
 .hamburger::before,
-.hamburger::after,
-.hamburger {
-  background: transparent;
-}
-
-.hamburger::before,
 .hamburger::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
   height: 2px;
-  border-radius: 999px;
-  background: var(--text);
-  transition: transform 160ms ease, top 160ms ease, opacity 160ms ease;
+  background: var(--bone);
+  transition: transform 160ms ease, top 160ms ease;
 }
 
 .hamburger::before { top: 2px; }
@@ -113,51 +140,46 @@ html, body {
 .site-menu {
   position: absolute;
   top: 100%;
-  right: 10px;
-  left: 10px;
-  margin-top: 10px;
+  right: 14px;
+  left: 14px;
   padding: 10px;
-  border: 1px solid var(--header-border);
-  border-radius: 14px;
-  background: rgba(10, 10, 15, 0.92);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
+  border: 1px solid var(--rule);
+  background: var(--bg);
   display: grid;
-  gap: 6px;
-  transform-origin: top;
-  transform: scale(0.98);
+  gap: 4px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 160ms ease, transform 160ms ease;
+  transition: opacity 160ms ease;
 }
 
 .site-link {
-  color: var(--text);
+  color: var(--bone);
   text-decoration: none;
-  font: 500 14px/1.2 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-  padding: 10px 10px;
-  border-radius: 10px;
+  font: 500 12px/1.2 var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 12px 6px;
+  border-bottom: 4px solid transparent;
 }
 
 .site-link:hover {
-  background: rgba(255, 255, 255, 0.06);
+  color: var(--signal);
 }
 
-.site-link:focus-visible {
-  outline: 2px solid rgba(120, 160, 255, 0.9);
-  outline-offset: 2px;
+.site-link[aria-current="page"] {
+  color: var(--signal);
+  border-bottom-color: var(--signal);
 }
 
 .site-menu-backdrop {
   position: fixed;
   inset: 0;
   z-index: 15;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .site-header.is-menu-open .site-menu {
   opacity: 1;
-  transform: scale(1);
   pointer-events: auto;
 }
 
@@ -173,33 +195,176 @@ html, body {
 
 @media (min-width: 760px) {
   .site-menu-backdrop { display: none; }
-
   .site-menu-button { display: none; }
 
   .site-menu {
     position: static;
-    margin: 0;
     padding: 0;
     border: 0;
-    border-radius: 0;
     background: transparent;
     display: flex;
-    gap: 6px;
-    transform: none;
+    gap: 22px;
     opacity: 1;
     pointer-events: auto;
     transition: none;
   }
 
   .site-link {
-    color: var(--text-muted);
-    padding: 8px 10px;
+    padding: 6px 0;
   }
+}
 
-  .site-link:hover {
-    color: var(--text);
-    background: rgba(255, 255, 255, 0.06);
-  }
+/* ---------- Homepage ---------- */
+.home {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(6vh + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.home-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.spine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.spine i {
+  display: block;
+  width: 6px;
+  height: 22px;
+  background: var(--bone);
+}
+
+.spine i.is-red {
+  background: var(--signal);
+}
+
+.wordmark {
+  font: 800 30px/1 var(--font-display);
+  letter-spacing: 0.6em;
+  padding-left: 0.6em; /* balance the trailing letter-spacing */
+  text-transform: uppercase;
+  color: var(--bone-bright);
+}
+
+@media (max-height: 640px) {
+  .spine { display: none; }
+}
+
+/* ---------- Linked pages ---------- */
+.page-reading .webgl {
+  opacity: 0.18;
+}
+
+.page {
+  min-height: 100vh;
+  padding-top: calc(90px + env(safe-area-inset-top));
+}
+
+.content {
+  width: min(960px, calc(100% - 56px));
+  margin: 0 auto;
+  padding: 24px 0 96px;
+}
+
+.reading-header {
+  border-bottom: 10px solid var(--bone);
+  padding-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reading-kicker {
+  color: var(--signal);
+  font: 500 12px/1.4 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.reading-title {
+  font: 800 clamp(44px, 8vw, 64px)/0.92 var(--font-display);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--bone-bright);
+}
+
+.reading-list {
+  list-style: none;
+  counter-reset: entry;
+}
+
+.reading-item {
+  counter-increment: entry;
+  position: relative;
+  padding: 16px 0 16px 76px;
+  border-bottom: 1px solid var(--rule);
+  font: 400 13px/1.5 var(--font-mono);
+  color: var(--slate-dim);
+}
+
+/* Catalog number */
+.reading-item::before {
+  content: counter(entry, decimal-leading-zero);
+  position: absolute;
+  left: 22px;
+  top: 19px;
+  font: 400 12px/1.2 var(--font-mono);
+  color: var(--slate-dim);
+}
+
+/* Painted band marker */
+.reading-item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 24px;
+  width: 14px;
+  height: 4px;
+  background: rgba(236, 232, 220, 0.22);
+}
+
+.reading-item:hover::after {
+  background: var(--signal);
+}
+
+.reading-item a {
+  color: var(--slate);
+  text-decoration: none;
+}
+
+/* Book title (first link in each row) */
+.reading-item a:first-child {
+  font: 500 17px/1.35 var(--font-body);
+  color: var(--bone-bright);
+}
+
+.reading-item a:hover,
+.reading-item a:first-child:hover {
+  color: var(--signal);
+}
+
+@media (max-width: 560px) {
+  .site-header { padding-left: 16px; padding-right: 16px; }
+  .content { width: calc(100% - 32px); }
+  .reading-item { padding-left: 56px; }
+  .reading-item::before { left: 20px; }
+}
+
+/* dat.gui: keep hidden */
+.dg.ac {
+  display: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -208,97 +373,4 @@ html, body {
   .hamburger::after {
     transition: none;
   }
-}
-
-/* ---------- Simple page layout (for linked pages) ---------- */
-.page {
-  min-height: 100vh;
-  padding-top: 70px; /* header */
-  padding-top: calc(70px + env(safe-area-inset-top));
-  color: var(--text);
-}
-
-.content {
-  width: min(920px, calc(100% - 28px));
-  margin: 0 auto;
-  padding: 18px 0 52px;
-}
-
-.reading-header {
-  margin: 10px 0 18px;
-}
-
-.reading-title {
-  font: 700 28px/1.1 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-  letter-spacing: -0.02em;
-}
-
-.reading-subtitle {
-  margin-top: 8px;
-  color: var(--text-muted);
-  font: 400 14px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-}
-
-.reading-body {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--header-border);
-  border-radius: 16px;
-  padding: 16px;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-}
-
-.reading-h2 {
-  margin: 8px 0 10px;
-  font: 650 18px/1.2 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-}
-
-.reading-h3 {
-  margin: 10px 0 8px;
-  font: 650 16px/1.2 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-  color: var(--text-muted);
-}
-
-.reading-list {
-  list-style: none;
-  padding: 0;
-  margin: 10px 0;
-  display: grid;
-  gap: 10px;
-}
-
-.reading-item {
-  padding: 10px 10px;
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  font: 450 14px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-}
-
-.reading-item a,
-.reading-p a {
-  color: rgba(170, 200, 255, 0.95);
-  text-decoration: none;
-}
-
-.reading-item a:hover,
-.reading-p a:hover {
-  text-decoration: underline;
-}
-
-.reading-p {
-  margin: 8px 0;
-  color: var(--text-muted);
-  font: 400 14px/1.6 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-}
-
-.reading-loading,
-.reading-error {
-  color: var(--text-muted);
-  font: 400 14px/1.6 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-}
-
-/* dat.gui: hide the "Open/Close Controls" toggle label */
-.dg .close-button {
-  display: none !important;
 }
